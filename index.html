@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#090d16] text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Lease vs. Finance Cost Calculator | Bharrys Financial Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#090d16',
+                            card: '#111827',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                            cyan: '#38bdf8',
+                            indigo: '#818cf8',
+                            emerald: '#34d399',
+                            rose: '#f43f5e'
+                        }
+                    },
+                    boxShadow: {
+                        glow: '0 0 25px -5px rgba(56, 189, 248, 0.15)',
+                        'glow-indigo': '0 0 25px -5px rgba(129, 140, 248, 0.2)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card-lease {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+        }
+        .glass-card-finance {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(129, 140, 248, 0.25);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col font-sans antialiased selection:bg-cyan-500 selection:text-black bg-[#090d16] text-slate-100">
+
+    <!-- Background Glow Effects -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/3 -right-40 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Header Navbar -->
+    <header class="relative z-10 border-b border-slate-800/80 bg-[#090d16]/80 backdrop-blur-md sticky top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="https://financialhub.bharrys.com/" class="p-2.5 bg-slate-900 border border-slate-700/60 rounded-xl text-cyan-400 hover:border-cyan-400 transition shadow-glow">
+                    <i data-lucide="car" class="w-6 h-6"></i>
+                </a>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white font-mono">BHARRYS <span class="text-cyan-400">FINANCIAL</span></h1>
+                        <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-400 border border-cyan-800/50">AUTO MODEL</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-0.5">Car Lease vs. Financing Cost of Ownership Analyzer</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="https://financialhub.bharrys.com/" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-slate-300 hover:text-white hover:border-slate-600 transition">
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                    <span>Suite Hub</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Hero & Shared Global Parameters Banner -->
+        <section class="glass-panel rounded-3xl p-6 sm:p-8 space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-700/80 text-xs font-medium text-cyan-400 mb-2">
+                        <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+                        <span>Direct Cash Flow & Equity Comparison</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                        Lease vs. Finance <span class="bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">Ownership Analyzer</span>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
+                        Compare direct out-of-pocket costs and ending equity positions when leasing versus financing a vehicle. <span class="text-slate-300 font-semibold">(Excludes fuel, insurance, and routine maintenance costs)</span>.
+                    </p>
+                </div>
+
+                <!-- Quick Preset Buttons -->
+                <div class="flex flex-wrap items-center gap-2 shrink-0">
+                    <span class="text-xs font-mono text-slate-400 w-full sm:w-auto">Load Preset:</span>
+                    <button type="button" onclick="loadPreset('sedan')" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-cyan-400 border border-slate-700 transition">
+                        $35k Sedan
+                    </button>
+                    <button type="button" onclick="loadPreset('suv')" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-indigo-400 border border-slate-700 transition">
+                        $55k Luxury SUV
+                    </button>
+                    <button type="button" onclick="loadPreset('zeroDown')" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-emerald-400 border border-slate-700 transition">
+                        Zero Down
+                    </button>
+                </div>
+            </div>
+
+            <!-- Global Shared Car Vehicle Input Bar -->
+            <div class="p-4 bg-slate-900/90 rounded-2xl border border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1 flex items-center justify-between">
+                        <span>Vehicle Price / MSRP</span>
+                        <i data-lucide="tag" class="w-3.5 h-3.5 text-cyan-400"></i>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono">$</span>
+                        <input type="number" id="global-vehicle-price" value="40000" step="500" oninput="calculateAll()" class="w-full pl-7 pr-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-white font-mono font-bold outline-none focus:border-cyan-400 transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1 flex items-center justify-between">
+                        <span>State (Sales Tax Rate)</span>
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400"></i>
+                    </label>
+                    <select id="global-state-tax" onchange="calculateAll()" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-white font-mono font-bold outline-none focus:border-cyan-400 transition">
+                        <option value="0.0">AK - Alaska (0.0%)</option>
+                        <option value="4.0">AL - Alabama (4.0%)</option>
+                        <option value="6.5">AR - Arkansas (6.5%)</option>
+                        <option value="5.6">AZ - Arizona (5.6%)</option>
+                        <option value="7.25" selected>CA - California (7.25%)</option>
+                        <option value="2.9">CO - Colorado (2.9%)</option>
+                        <option value="6.35">CT - Connecticut (6.35%)</option>
+                        <option value="0.0">DE - Delaware (0.0%)</option>
+                        <option value="6.0">FL - Florida (6.0%)</option>
+                        <option value="4.0">GA - Georgia (4.0%)</option>
+                        <option value="4.0">HI - Hawaii (4.0%)</option>
+                        <option value="6.0">IA - Iowa (6.0%)</option>
+                        <option value="6.0">ID - Idaho (6.0%)</option>
+                        <option value="6.25">IL - Illinois (6.25%)</option>
+                        <option value="7.0">IN - Indiana (7.0%)</option>
+                        <option value="6.5">KS - Kansas (6.5%)</option>
+                        <option value="6.0">KY - Kentucky (6.0%)</option>
+                        <option value="4.45">LA - Louisiana (4.45%)</option>
+                        <option value="6.25">MA - Massachusetts (6.25%)</option>
+                        <option value="6.0">MD - Maryland (6.0%)</option>
+                        <option value="5.5">ME - Maine (5.5%)</option>
+                        <option value="6.0">MI - Michigan (6.0%)</option>
+                        <option value="6.875">MN - Minnesota (6.875%)</option>
+                        <option value="4.225">MO - Missouri (4.225%)</option>
+                        <option value="7.0">MS - Mississippi (7.0%)</option>
+                        <option value="0.0">MT - Montana (0.0%)</option>
+                        <option value="4.75">NC - North Carolina (4.75%)</option>
+                        <option value="5.0">ND - North Dakota (5.0%)</option>
+                        <option value="5.5">NE - Nebraska (5.5%)</option>
+                        <option value="0.0">NH - New Hampshire (0.0%)</option>
+                        <option value="6.625">NJ - New Jersey (6.625%)</option>
+                        <option value="5.125">NM - New Mexico (5.125%)</option>
+                        <option value="6.85">NV - Nevada (6.85%)</option>
+                        <option value="4.0">NY - New York (4.0%)</option>
+                        <option value="5.75">OH - Ohio (5.75%)</option>
+                        <option value="4.5">OK - Oklahoma (4.5%)</option>
+                        <option value="0.0">OR - Oregon (0.0%)</option>
+                        <option value="6.0">PA - Pennsylvania (6.0%)</option>
+                        <option value="7.0">RI - Rhode Island (7.0%)</option>
+                        <option value="6.0">SC - South Carolina (6.0%)</option>
+                        <option value="4.5">SD - South Dakota (4.5%)</option>
+                        <option value="7.0">TN - Tennessee (7.0%)</option>
+                        <option value="6.25">TX - Texas (6.25%)</option>
+                        <option value="6.1">UT - Utah (6.1%)</option>
+                        <option value="5.3">VA - Virginia (5.3%)</option>
+                        <option value="6.0">VT - Vermont (6.0%)</option>
+                        <option value="6.5">WA - Washington (6.5%)</option>
+                        <option value="5.0">WI - Wisconsin (5.0%)</option>
+                        <option value="6.0">WV - West Virginia (6.0%)</option>
+                        <option value="4.0">WY - Wyoming (4.0%)</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Executive Comparison Summary Card -->
+        <section id="summary-banner" class="glass-panel rounded-3xl p-6 relative overflow-hidden border-cyan-500/30">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+                <!-- Winning Option Recommendation -->
+                <div class="flex items-start gap-4 w-full lg:w-1/2">
+                    <div id="summary-icon-wrapper" class="p-3.5 rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shrink-0">
+                        <i data-lucide="trophy" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-mono uppercase tracking-wider font-bold text-cyan-400 bg-cyan-950 px-2.5 py-0.5 rounded-md border border-cyan-800">Financial Recommendation</span>
+                        <h3 id="summary-winner-title" class="text-xl font-extrabold text-white mt-1">Leasing offers lower monthly out-of-pocket cost</h3>
+                        <p id="summary-winner-desc" class="text-xs text-slate-300 mt-1 leading-relaxed">
+                            Financing requires higher monthly outlays, but builds <span class="text-emerald-400 font-bold" id="summary-equity-val">$18,400</span> in vehicle equity at term completion.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Comparison Key Metrics Pill Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full lg:w-1/2 text-xs font-mono">
+                    <div class="p-3 bg-slate-900/80 rounded-2xl border border-slate-800">
+                        <span class="text-[10px] text-slate-400">Monthly Lease</span>
+                        <p class="text-base font-extrabold text-cyan-400 mt-0.5" id="sum-monthly-lease">$425 /mo</p>
+                    </div>
+                    <div class="p-3 bg-slate-900/80 rounded-2xl border border-slate-800">
+                        <span class="text-[10px] text-slate-400">Monthly Loan</span>
+                        <p class="text-base font-extrabold text-indigo-400 mt-0.5" id="sum-monthly-finance">$710 /mo</p>
+                    </div>
+                    <div class="p-3 bg-slate-900/80 rounded-2xl border border-slate-800 col-span-2 sm:col-span-1">
+                        <span class="text-[10px] text-slate-400">Net Cost Difference</span>
+                        <p class="text-base font-extrabold text-emerald-400 mt-0.5" id="sum-net-diff">Financing +$2,150</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TWO COLUMN COMPARATIVE LAYOUT -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- LEFT COLUMN: LEASE OPTION -->
+            <div class="glass-card-lease rounded-3xl p-6 space-y-6 flex flex-col justify-between">
+                <div class="space-y-5">
+                    <!-- Column Header -->
+                    <div class="flex items-center justify-between pb-4 border-b border-cyan-500/20">
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                                <i data-lucide="key-round" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-white">Lease Option</h3>
+                                <p class="text-[11px] text-slate-400">Pay for depreciation during term</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lease Inputs -->
+                    <div class="space-y-4 text-xs">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">Down Payment</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono">$</span>
+                                    <input type="number" id="lease-down" value="3000" step="250" oninput="calculateAll()" class="w-full pl-7 pr-3 py-2 bg-slate-900 border border-cyan-500/40 rounded-xl text-white font-mono font-bold outline-none focus:border-cyan-400 transition">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">Lease Term (Months)</label>
+                                <select id="lease-term" onchange="calculateAll()" class="w-full px-3 py-2 bg-slate-900 border border-cyan-500/40 rounded-xl text-white font-mono font-bold outline-none focus:border-cyan-400 transition">
+                                    <option value="24">24 Months (2 Years)</option>
+                                    <option value="36" selected>36 Months (3 Years)</option>
+                                    <option value="48">48 Months (4 Years)</option>
+                                    <option value="60">60 Months (5 Years)</option>
+                                    <option value="72">72 Months (6 Years)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="font-semibold text-slate-300">Monthly Lease Payment ($)</label>
+                                <span class="text-[10px] text-cyan-400 font-mono cursor-pointer hover:underline" onclick="autoEstimateLease()">Auto Estimate</span>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono">$</span>
+                                <input type="number" id="lease-monthly-pmt" value="425" step="5" oninput="calculateAll()" class="w-full pl-7 pr-3 py-2.5 bg-slate-900 border border-cyan-500/40 rounded-xl text-white font-mono font-bold text-sm outline-none focus:border-cyan-400 transition">
+                            </div>
+                            <p class="text-[10px] text-slate-500 mt-1">Includes sales tax on lease payment</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">Acquisition & Dealer Fee</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono">$</span>
+                                    <input type="number" id="lease-acq-fee" value="695" step="25" oninput="calculateAll()" class="w-full pl-7 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white font-mono font-bold outline-none focus:border-cyan-400 transition">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">Disposition / Return Fee</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono">$</span>
+                                    <input type="number" id="lease-disp-fee" value="395" step="25" oninput="calculateAll()" class="w-full pl-7 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white font-mono font-bold outline-none focus:border-cyan-400 transition">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mileage Settings -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">Allowed Miles / Year</label>
+                                <input type="number" id="lease-allowed-miles" value="12000" step="1000" oninput="calculateAll()" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white font-mono font-bold outline-none focus:border-cyan-400 transition">
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">Overage Penalty ($/mile)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono">$</span>
+                                    <input type="number" id="lease-mile-penalty" value="0.25" step="0.05" min="0" oninput="calculateAll()" class="w-full pl-7 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white font-mono font-bold outline-none focus:border-cyan-400 transition">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estimated Driving Mileage Slider -->
+                        <div>
+                            <label class="block font-semibold text-slate-300 mb-1 flex items-center justify-between">
+                                <span>Estimated Driving Miles / Year</span>
+                                <span class="text-cyan-400 font-mono font-bold" id="lease-est-miles-disp">15,000 miles</span>
+                            </label>
+                            <div class="flex items-center gap-3">
+                                <input type="range" id="lease-est-miles" min="5000" max="50000" value="15000" step="500" oninput="calculateAll()" class="w-full accent-cyan-400 cursor-pointer">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-300 mb-1 flex items-center justify-between">
+                                <span>Estimated Residual Value (% of MSRP)</span>
+                                <span class="text-cyan-400 font-mono font-bold" id="lease-residual-val-disp">$22,000</span>
+                            </label>
+                            <div class="flex items-center gap-3">
+                                <input type="range" id="lease-residual-pct" min="30" max="80" value="55" step="1" oninput="calculateAll()" class="w-full accent-cyan-400 cursor-pointer">
+                                <span class="text-xs font-mono font-bold text-slate-200 w-12 text-right" id="lease-residual-pct-label">55%</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-300 mb-1">End of Term Strategy</label>
+                            <select id="lease-end-strategy" onchange="calculateAll()" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white font-mono font-semibold outline-none focus:border-cyan-400 transition">
+                                <option value="return">Return Vehicle to Dealer (Equity = $0)</option>
+                                <option value="buyout">Exercise Buyout Option (Purchase Residual Value)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lease Outputs Card -->
+                <div class="mt-6 pt-5 border-t border-cyan-500/20 bg-slate-900/80 rounded-2xl p-4 space-y-3 font-mono text-xs">
+                    <h4 class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Lease Cost Summary</h4>
+
+                    <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                        <span class="text-slate-400">Total Lease Payment for the entire term</span>
+                        <span class="text-white font-bold" id="out-lease-total-pmts">$15,300</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                        <span class="text-slate-400">Upfront Down Payment & Fees</span>
+                        <span class="text-white font-bold" id="out-lease-upfront">$3,695</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                        <span class="text-slate-400">End-of-Lease Return Fee</span>
+                        <span class="text-white font-bold" id="out-lease-disposition">$395</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                        <span class="text-slate-400">Mileage Overage Fee</span>
+                        <span class="text-amber-400 font-bold" id="out-lease-mileage-cost">$0</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                        <span class="text-slate-400">Total Out-of-Pocket Cash Outflow</span>
+                        <span class="text-cyan-400 font-extrabold text-sm" id="out-lease-total-cash">$19,390</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                        <span class="text-slate-400">Retained Vehicle Equity at End</span>
+                        <span class="text-slate-400 font-bold" id="out-lease-equity">$0</span>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-1 text-sm bg-cyan-950/40 p-2.5 rounded-xl border border-cyan-800/40">
+                        <span class="text-cyan-300 font-bold">Net Lease Cost of Ownership</span>
+                        <span class="text-cyan-400 font-extrabold" id="out-lease-net-cost">$19,390</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: FINANCE OPTION -->
+            <div class="glass-card-finance rounded-3xl p-6 space-y-6 flex flex-col justify-between">
+                <div class="space-y-5">
+                    <!-- Column Header with Copy Button -->
+                    <div class="flex items-center justify-between pb-4 border-b border-indigo-500/20">
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">
+                                <i data-lucide="landmark" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-white">Finance Option</h3>
+                                <p class="text-[11px] text-slate-400">Purchase vehicle with auto loan</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="copyFromLease()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/80 text-[10px] font-mono font-bold transition">
+                                <i data-lucide="copy" class="w-3 h-3"></i>
+                                <span>Copy from Lease</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Finance Inputs -->
+                    <div class="space-y-4 text-xs">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">Down Payment</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono">$</span>
+                                    <input type="number" id="finance-down" value="3000" step="250" oninput="calculateAll()" class="w-full pl-7 pr-3 py-2 bg-slate-900 border border-indigo-500/40 rounded-xl text-white font-mono font-bold outline-none focus:border-indigo-400 transition">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">Loan Term (Months)</label>
+                                <select id="finance-term" onchange="calculateAll()" class="w-full px-3 py-2 bg-slate-900 border border-indigo-500/40 rounded-xl text-white font-mono font-bold outline-none focus:border-indigo-400 transition">
+                                    <option value="24">24 Months (2 Years)</option>
+                                    <option value="36" selected>36 Months (3 Years)</option>
+                                    <option value="48">48 Months (4 Years)</option>
+                                    <option value="60">60 Months (5 Years)</option>
+                                    <option value="72">72 Months (6 Years)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-300 mb-1 flex items-center justify-between">
+                                <span>Finance Interest Rate / APY (%)</span>
+                                <i data-lucide="percent" class="w-3.5 h-3.5 text-indigo-400"></i>
+                            </label>
+                            <div class="relative">
+                                <input type="number" id="finance-apy" value="6.5" step="0.1" min="0" max="25" oninput="calculateAll()" class="w-full pr-7 pl-3 py-2.5 bg-slate-900 border border-indigo-500/40 rounded-xl text-white font-mono font-bold text-sm outline-none focus:border-indigo-400 transition">
+                                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono">%</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 mt-1">Annual percentage rate for vehicle loan</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">Financed Amount (Loan Principal)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono">$</span>
+                                    <input type="text" id="finance-principal-disp" readonly value="$39,800" class="w-full pl-7 pr-3 py-2 bg-slate-900/90 border border-slate-800 rounded-xl text-slate-300 font-mono font-bold cursor-not-allowed">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">Sales Tax on Vehicle</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono">$</span>
+                                    <input type="text" id="finance-tax-amount-disp" readonly value="$2,800" class="w-full pl-7 pr-3 py-2 bg-slate-900/90 border border-slate-800 rounded-xl text-slate-300 font-mono font-bold cursor-not-allowed">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-300 mb-1 flex items-center justify-between">
+                                <span>Estimated Market Value at End of Term</span>
+                                <span class="text-indigo-400 font-mono font-bold" id="finance-market-val-disp">$22,000</span>
+                            </label>
+                            <div class="flex items-center gap-3">
+                                <input type="range" id="finance-resale-pct" min="30" max="80" value="55" step="1" oninput="calculateAll()" class="w-full accent-indigo-400 cursor-pointer">
+                                <span class="text-xs font-mono font-bold text-slate-200 w-12 text-right" id="finance-resale-pct-label">55%</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-300 mb-1">Calculated Monthly Loan Payment</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono">$</span>
+                                <input type="text" id="finance-monthly-pmt-disp" readonly value="$1,220" class="w-full pl-7 pr-3 py-2 bg-slate-900/90 border border-indigo-500/30 rounded-xl text-indigo-300 font-mono font-extrabold text-sm cursor-not-allowed">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Finance Outputs Card -->
+                <div class="mt-6 pt-5 border-t border-indigo-500/20 bg-slate-900/80 rounded-2xl p-4 space-y-3 font-mono text-xs">
+                    <h4 class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Finance Cost Summary</h4>
+
+                    <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                        <span class="text-slate-400">Total Loan Payment for the entire term</span>
+                        <span class="text-white font-bold" id="out-fin-total-pmts">$43,920</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                        <span class="text-slate-400">Total Interest Paid</span>
+                        <span class="text-indigo-300 font-bold" id="out-fin-total-interest">$4,120</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                        <span class="text-slate-400">Down Payment Outflow</span>
+                        <span class="text-white font-bold" id="out-fin-down">$3,000</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                        <span class="text-slate-400">Total Out-of-Pocket Cash Outflow</span>
+                        <span class="text-indigo-400 font-extrabold text-sm" id="out-fin-total-cash">$46,920</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-1 border-b border-slate-800">
+                        <span class="text-slate-400">Retained Vehicle Asset Equity</span>
+                        <span class="text-emerald-400 font-bold" id="out-fin-equity">+$22,000</span>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-1 text-sm bg-indigo-950/40 p-2.5 rounded-xl border border-indigo-800/40">
+                        <span class="text-indigo-300 font-bold">Net Finance Cost (Cash minus Equity)</span>
+                        <span class="text-indigo-400 font-extrabold" id="out-fin-net-cost">$24,920</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- VISUAL COMPARISON BARS SECTION -->
+        <section class="glass-panel rounded-3xl p-6 space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5 text-cyan-400"></i>
+                    <h3 class="text-base font-bold text-white">Visual Outflow vs. Net Ownership Cost Comparison</h3>
+                </div>
+                <span class="text-xs text-slate-400">Lease: <span id="visual-lease-term-label" class="font-mono text-white">36m</span> | Finance: <span id="visual-finance-term-label" class="font-mono text-white">36m</span></span>
+            </div>
+
+            <div class="space-y-6 text-xs font-mono">
+                <!-- Bar 1: Monthly Cash Outflow -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-slate-300 font-sans font-semibold">
+                        <span>Monthly Payment Comparison</span>
+                        <span id="bar-monthly-diff-text" class="text-cyan-400 font-mono">Lease saves $285 / mo</span>
+                    </div>
+                    <div class="h-8 bg-slate-900 rounded-xl border border-slate-800 flex overflow-hidden p-1 gap-1">
+                        <div id="bar-monthly-lease" class="bg-cyan-500 rounded-lg flex items-center justify-end pr-2 text-black font-extrabold transition-all duration-500" style="width: 40%;">
+                            <span id="bar-monthly-lease-val">$425</span>
+                        </div>
+                        <div id="bar-monthly-finance" class="bg-indigo-500 rounded-lg flex items-center justify-end pr-2 text-white font-extrabold transition-all duration-500" style="width: 60%;">
+                            <span id="bar-monthly-finance-val">$710</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                        <span class="text-cyan-400">■ Lease Monthly</span>
+                        <span class="text-indigo-400">■ Finance Monthly</span>
+                    </div>
+                </div>
+
+                <!-- Bar 2: Total Out-of-Pocket Cash Spent -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-slate-300 font-sans font-semibold">
+                        <span>Total Out-of-Pocket Cash Spent (Down + Monthly Payments + Fees + Mileage Penalties)</span>
+                        <span id="bar-cash-diff-text" class="text-cyan-400 font-mono">Lease lower initial outlay by $27,530</span>
+                    </div>
+                    <div class="h-8 bg-slate-900 rounded-xl border border-slate-800 flex overflow-hidden p-1 gap-1">
+                        <div id="bar-cash-lease" class="bg-cyan-500/80 rounded-lg flex items-center justify-end pr-2 text-black font-extrabold transition-all duration-500" style="width: 30%;">
+                            <span id="bar-cash-lease-val">$19,390</span>
+                        </div>
+                        <div id="bar-cash-finance" class="bg-indigo-500/80 rounded-lg flex items-center justify-end pr-2 text-white font-extrabold transition-all duration-500" style="width: 70%;">
+                            <span id="bar-cash-finance-val">$46,920</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                        <span class="text-cyan-400">■ Lease Out-of-Pocket</span>
+                        <span class="text-indigo-400">■ Finance Out-of-Pocket</span>
+                    </div>
+                </div>
+
+                <!-- Bar 3: True Net Cost of Ownership -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-slate-300 font-sans font-semibold">
+                        <span>True Net Cost of Ownership (Total Out-of-Pocket minus Retained Asset Equity)</span>
+                        <span id="bar-net-diff-text" class="text-emerald-400 font-mono">Financing overall savings: $5,530</span>
+                    </div>
+                    <div class="h-8 bg-slate-900 rounded-xl border border-slate-800 flex overflow-hidden p-1 gap-1">
+                        <div id="bar-net-lease" class="bg-cyan-400 rounded-lg flex items-center justify-end pr-2 text-black font-extrabold transition-all duration-500" style="width: 45%;">
+                            <span id="bar-net-lease-val">$19,390</span>
+                        </div>
+                        <div id="bar-net-finance" class="bg-emerald-400 rounded-lg flex items-center justify-end pr-2 text-black font-extrabold transition-all duration-500" style="width: 55%;">
+                            <span id="bar-net-finance-val">$24,920</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                        <span class="text-cyan-400">■ Lease Net Cost</span>
+                        <span class="text-emerald-400">■ Finance Net Cost (after vehicle equity)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Decision Considerations & Trade-offs Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass-panel rounded-3xl p-6 space-y-3">
+                <div class="flex items-center gap-2 text-cyan-400 font-bold text-sm">
+                    <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                    <span>When Leasing Makes Sense</span>
+                </div>
+                <ul class="space-y-2 text-xs text-slate-300 leading-relaxed list-disc list-inside">
+                    <li>Lower monthly payments fit your monthly budget better.</li>
+                    <li>You prefer driving a new vehicle every 2 to 3 years with the latest technology and safety features.</li>
+                    <li>You stay within standard mileage limits (e.g. 10,000 – 12,000 miles/year).</li>
+                    <li>You don't want to worry about selling or trading in a depreciating vehicle at term end.</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel rounded-3xl p-6 space-y-3">
+                <div class="flex items-center gap-2 text-indigo-400 font-bold text-sm">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    <span>When Financing Makes Sense</span>
+                </div>
+                <ul class="space-y-2 text-xs text-slate-300 leading-relaxed list-disc list-inside">
+                    <li>You plan to keep the car long after loan payoff to enjoy years with zero monthly payments.</li>
+                    <li>You drive high annual mileage and want to avoid excess mileage penalties ($0.15–$0.25/mile).</li>
+                    <li>You want full ownership and the flexibility to customize or sell the car anytime.</li>
+                    <li>You want to build long-term personal asset equity.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-[#090d16] text-slate-500 text-xs py-6 mt-auto relative z-10">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <p>&copy; <span id="year"></span> Bharrys Ventures. Car Ownership Analyzer</p>
+            <div class="flex items-center gap-4 text-slate-400">
+                <a href="https://financialhub.bharrys.com/" class="hover:text-cyan-400 transition">Suite Hub</a>
+                <span class="text-slate-800">•</span>
+                <a href="https://mortgagecalc.bharrys.com/" target="_blank" class="hover:text-cyan-400 transition">Mortgage Calculator</a>
+                <span class="text-slate-800">•</span>
+                <a href="https://cdcalc.bharrys.com/" target="_blank" class="hover:text-cyan-400 transition">CD Calculator</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const formatCurrency = (val) => '$' + Math.round(val).toLocaleString('en-US');
+
+        function copyFromLease() {
+            document.getElementById('finance-down').value = document.getElementById('lease-down').value;
+            document.getElementById('finance-term').value = document.getElementById('lease-term').value;
+            calculateAll();
+        }
+
+        function autoEstimateLease() {
+            const vehiclePrice = parseFloat(document.getElementById('global-vehicle-price').value) || 0;
+            const downPayment = parseFloat(document.getElementById('lease-down').value) || 0;
+            const term = parseInt(document.getElementById('lease-term').value) || 36;
+            const residualPct = (parseFloat(document.getElementById('lease-residual-pct').value) || 55) / 100;
+            const taxRate = (parseFloat(document.getElementById('global-state-tax').value) || 0) / 100;
+
+            const residualVal = vehiclePrice * residualPct;
+            const netCapCost = Math.max(0, vehiclePrice - downPayment);
+            const depreciation = (netCapCost - residualVal) / term;
+            const moneyFactor = 0.0025; // Approx ~6% APR
+            const financeCharge = (netCapCost + residualVal) * moneyFactor;
+            const preTaxPmt = depreciation + financeCharge;
+            const totalMonthlyPmt = preTaxPmt * (1 + taxRate);
+
+            document.getElementById('lease-monthly-pmt').value = Math.round(Math.max(100, totalMonthlyPmt));
+            calculateAll();
+        }
+
+        function calculateAll() {
+            const vehiclePrice = parseFloat(document.getElementById('global-vehicle-price').value) || 0;
+            const taxRate = (parseFloat(document.getElementById('global-state-tax').value) || 0) / 100;
+
+            // --- 1. LEASE CALCULATIONS ---
+            const leaseTerm = parseInt(document.getElementById('lease-term').value) || 36;
+            const leaseDownPayment = parseFloat(document.getElementById('lease-down').value) || 0;
+            const monthlyLeasePmt = parseFloat(document.getElementById('lease-monthly-pmt').value) || 0;
+            const acqFee = parseFloat(document.getElementById('lease-acq-fee').value) || 0;
+            const dispFee = parseFloat(document.getElementById('lease-disp-fee').value) || 0;
+            const residualPct = parseFloat(document.getElementById('lease-residual-pct').value) || 55;
+            const residualVal = vehiclePrice * (residualPct / 100);
+            const leaseEndStrategy = document.getElementById('lease-end-strategy').value;
+
+            // Mileage calculations
+            const allowedMilesPerYear = parseFloat(document.getElementById('lease-allowed-miles').value) || 0;
+            const milePenaltyRate = parseFloat(document.getElementById('lease-mile-penalty').value) || 0;
+            const estMilesPerYear = parseFloat(document.getElementById('lease-est-miles').value) || 0;
+            document.getElementById('lease-est-miles-disp').textContent = estMilesPerYear.toLocaleString('en-US') + ' miles';
+
+            const leaseTermYears = leaseTerm / 12;
+            const totalAllowedMiles = allowedMilesPerYear * leaseTermYears;
+            const totalEstMiles = estMilesPerYear * leaseTermYears;
+            const excessMiles = Math.max(0, totalEstMiles - totalAllowedMiles);
+            const mileageCost = leaseEndStrategy === 'return' ? excessMiles * milePenaltyRate : 0;
+
+            document.getElementById('lease-residual-val-disp').textContent = formatCurrency(residualVal);
+            document.getElementById('lease-residual-pct-label').textContent = residualPct + '%';
+
+            const totalLeasePmts = monthlyLeasePmt * leaseTerm;
+            const leaseUpfrontOutlay = leaseDownPayment + acqFee;
+            const totalLeaseCashOutflow = totalLeasePmts + leaseUpfrontOutlay + (leaseEndStrategy === 'return' ? dispFee : 0) + mileageCost;
+
+            let leaseEndingEquity = 0;
+            let leaseNetCost = totalLeaseCashOutflow;
+
+            if (leaseEndStrategy === 'buyout') {
+                const buyoutTax = residualVal * taxRate;
+                const totalBuyoutCost = residualVal + buyoutTax;
+                const totalOutlayWithBuyout = totalLeaseCashOutflow + totalBuyoutCost;
+                leaseEndingEquity = residualVal;
+                leaseNetCost = totalOutlayWithBuyout - leaseEndingEquity;
+            }
+
+            document.getElementById('out-lease-total-pmts').textContent = formatCurrency(totalLeasePmts);
+            document.getElementById('out-lease-upfront').textContent = formatCurrency(leaseUpfrontOutlay);
+            document.getElementById('out-lease-disposition').textContent = formatCurrency(leaseEndStrategy === 'return' ? dispFee : 0);
+            document.getElementById('out-lease-mileage-cost').textContent = formatCurrency(mileageCost);
+            document.getElementById('out-lease-total-cash').textContent = formatCurrency(totalLeaseCashOutflow);
+            document.getElementById('out-lease-equity').textContent = formatCurrency(leaseEndingEquity);
+            document.getElementById('out-lease-net-cost').textContent = formatCurrency(leaseNetCost);
+
+            // --- 2. FINANCE CALCULATIONS ---
+            const financeTerm = parseInt(document.getElementById('finance-term').value) || 36;
+            const financeDownPayment = parseFloat(document.getElementById('finance-down').value) || 0;
+            const financeApy = (parseFloat(document.getElementById('finance-apy').value) || 0) / 100;
+            const salesTaxAmount = vehiclePrice * taxRate;
+            const loanPrincipal = Math.max(0, vehiclePrice + salesTaxAmount - financeDownPayment);
+            const monthlyRate = financeApy / 12;
+
+            document.getElementById('finance-tax-amount-disp').value = formatCurrency(salesTaxAmount);
+            document.getElementById('finance-principal-disp').value = formatCurrency(loanPrincipal);
+
+            let monthlyLoanPmt = 0;
+            if (monthlyRate > 0) {
+                monthlyLoanPmt = (loanPrincipal * monthlyRate * Math.pow(1 + monthlyRate, financeTerm)) / (Math.pow(1 + monthlyRate, financeTerm) - 1);
+            } else {
+                monthlyLoanPmt = loanPrincipal / financeTerm;
+            }
+
+            document.getElementById('finance-monthly-pmt-disp').value = formatCurrency(monthlyLoanPmt) + ' / mo';
+
+            const totalFinancePmts = monthlyLoanPmt * financeTerm;
+            const totalInterestPaid = Math.max(0, totalFinancePmts - loanPrincipal);
+            const totalFinanceCashOutflow = financeDownPayment + totalFinancePmts;
+
+            const financeResalePct = parseFloat(document.getElementById('finance-resale-pct').value) || 55;
+            const financeEndingEquity = vehiclePrice * (financeResalePct / 100);
+            document.getElementById('finance-market-val-disp').textContent = formatCurrency(financeEndingEquity);
+            document.getElementById('finance-resale-pct-label').textContent = financeResalePct + '%';
+
+            const financeNetCost = totalFinanceCashOutflow - financeEndingEquity;
+
+            document.getElementById('out-fin-total-pmts').textContent = formatCurrency(totalFinancePmts);
+            document.getElementById('out-fin-total-interest').textContent = formatCurrency(totalInterestPaid);
+            document.getElementById('out-fin-down').textContent = formatCurrency(financeDownPayment);
+            document.getElementById('out-fin-total-cash').textContent = formatCurrency(totalFinanceCashOutflow);
+            document.getElementById('out-fin-equity').textContent = '+' + formatCurrency(financeEndingEquity);
+            document.getElementById('out-fin-net-cost').textContent = formatCurrency(financeNetCost);
+
+            // --- 3. SUMMARY BANNER & COMPARISON BARS ---
+            document.getElementById('sum-monthly-lease').textContent = formatCurrency(monthlyLeasePmt) + ' /mo';
+            document.getElementById('sum-monthly-finance').textContent = formatCurrency(monthlyLoanPmt) + ' /mo';
+            document.getElementById('visual-lease-term-label').textContent = leaseTerm + 'm';
+            document.getElementById('visual-finance-term-label').textContent = financeTerm + 'm';
+
+            const netDiff = Math.abs(leaseNetCost - financeNetCost);
+            const isFinanceBetterNet = financeNetCost < leaseNetCost;
+
+            if (isFinanceBetterNet) {
+                document.getElementById('summary-winner-title').textContent = 'Financing provides lower overall Net Cost of Ownership';
+                document.getElementById('summary-winner-desc').innerHTML = `Financing saves <span class="text-emerald-400 font-bold">${formatCurrency(netDiff)}</span> net after factoring in <span class="text-emerald-400 font-bold">${formatCurrency(financeEndingEquity)}</span> of retained car asset equity.`;
+                document.getElementById('sum-net-diff').textContent = `Financing saves ${formatCurrency(netDiff)}`;
+                document.getElementById('sum-net-diff').className = 'text-base font-extrabold text-emerald-400 mt-0.5';
+            } else {
+                document.getElementById('summary-winner-title').textContent = 'Leasing provides lower overall Out-of-Pocket Cost';
+                document.getElementById('summary-winner-desc').innerHTML = `Leasing saves <span class="text-cyan-400 font-bold">${formatCurrency(netDiff)}</span> in total out-of-pocket cash outlay during the term.`;
+                document.getElementById('sum-net-diff').textContent = `Lease saves ${formatCurrency(netDiff)}`;
+                document.getElementById('sum-net-diff').className = 'text-base font-extrabold text-cyan-400 mt-0.5';
+            }
+
+            document.getElementById('summary-equity-val').textContent = formatCurrency(financeEndingEquity);
+
+            // --- 4. ANIMATE BARS ---
+            const maxMonthly = Math.max(monthlyLeasePmt, monthlyLoanPmt) || 1;
+            document.getElementById('bar-monthly-lease').style.width = Math.max(15, (monthlyLeasePmt / maxMonthly) * 100) + '%';
+            document.getElementById('bar-monthly-finance').style.width = Math.max(15, (monthlyLoanPmt / maxMonthly) * 100) + '%';
+            document.getElementById('bar-monthly-lease-val').textContent = formatCurrency(monthlyLeasePmt);
+            document.getElementById('bar-monthly-finance-val').textContent = formatCurrency(monthlyLoanPmt);
+            document.getElementById('bar-monthly-diff-text').textContent = monthlyLeasePmt < monthlyLoanPmt ? `Lease saves ${formatCurrency(monthlyLoanPmt - monthlyLeasePmt)} / mo` : `Finance saves ${formatCurrency(monthlyLeasePmt - monthlyLoanPmt)} / mo`;
+
+            const maxCash = Math.max(totalLeaseCashOutflow, totalFinanceCashOutflow) || 1;
+            document.getElementById('bar-cash-lease').style.width = Math.max(15, (totalLeaseCashOutflow / maxCash) * 100) + '%';
+            document.getElementById('bar-cash-finance').style.width = Math.max(15, (totalFinanceCashOutflow / maxCash) * 100) + '%';
+            document.getElementById('bar-cash-lease-val').textContent = formatCurrency(totalLeaseCashOutflow);
+            document.getElementById('bar-cash-finance-val').textContent = formatCurrency(totalFinanceCashOutflow);
+            document.getElementById('bar-cash-diff-text').textContent = `Lease initial cash outlay lower by ${formatCurrency(Math.abs(totalFinanceCashOutflow - totalLeaseCashOutflow))}`;
+
+            const maxNet = Math.max(leaseNetCost, financeNetCost) || 1;
+            document.getElementById('bar-net-lease').style.width = Math.max(15, (leaseNetCost / maxNet) * 100) + '%';
+            document.getElementById('bar-net-finance').style.width = Math.max(15, (financeNetCost / maxNet) * 100) + '%';
+            document.getElementById('bar-net-lease-val').textContent = formatCurrency(leaseNetCost);
+            document.getElementById('bar-net-finance-val').textContent = formatCurrency(financeNetCost);
+            document.getElementById('bar-net-diff-text').textContent = isFinanceBetterNet ? `Financing saves ${formatCurrency(netDiff)} overall` : `Leasing saves ${formatCurrency(netDiff)} overall`;
+        }
+
+        function loadPreset(type) {
+            if (type === 'sedan') {
+                document.getElementById('global-vehicle-price').value = 35000;
+                document.getElementById('lease-term').value = 36;
+                document.getElementById('finance-term').value = 36;
+                document.getElementById('lease-down').value = 2500;
+                document.getElementById('finance-down').value = 2500;
+                document.getElementById('lease-monthly-pmt').value = 385;
+                document.getElementById('finance-apy').value = 6.2;
+            } else if (type === 'suv') {
+                document.getElementById('global-vehicle-price').value = 58000;
+                document.getElementById('lease-term').value = 36;
+                document.getElementById('finance-term').value = 36;
+                document.getElementById('lease-down').value = 5000;
+                document.getElementById('finance-down').value = 5000;
+                document.getElementById('lease-monthly-pmt').value = 640;
+                document.getElementById('finance-apy').value = 5.9;
+            } else if (type === 'zeroDown') {
+                document.getElementById('global-vehicle-price').value = 42000;
+                document.getElementById('lease-term').value = 36;
+                document.getElementById('finance-term').value = 36;
+                document.getElementById('lease-down').value = 0;
+                document.getElementById('finance-down').value = 0;
+                document.getElementById('lease-monthly-pmt').value = 510;
+                document.getElementById('finance-apy').value = 6.5;
+            }
+            calculateAll();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            const yearEl = document.getElementById('year');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+            calculateAll();
+        });
+    </script>
+</body>
+</html>
